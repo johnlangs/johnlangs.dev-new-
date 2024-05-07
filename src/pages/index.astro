@@ -1,0 +1,124 @@
+---
+import "normalize.css";
+import "concrete.css";
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>John Langs</title>
+	</head>
+	<body>
+		<header>
+			<h1>John Langs</h1>
+
+			<p>
+				Computer Science student with interests in
+				robotics, machince learning, and .
+			</p>
+
+			<div id="sphere"></div>
+
+			<p>
+				<a href="https://github.com/johnlangs">GitHub</a
+				> |
+				<a href="">About</a> |
+				<a href="/works">Previous Works</a>
+			</p>
+			<p>▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼</p>
+		</header>
+	</body>
+</html>
+
+<script>
+	import * as THREE from "three";
+	import { AsciiEffect } from "three/addons/effects/AsciiEffect.js";
+	import { TrackballControls } from "three/addons/controls/TrackballControls.js";
+
+	let camera, controls, scene, renderer, effect;
+
+	let sphere, plane;
+
+	const start = Date.now();
+
+	init();
+	animate();
+
+	function init() {
+		camera = new THREE.PerspectiveCamera(
+			70,
+			window.innerWidth / window.innerHeight,
+			1,
+			1000,
+		);
+		camera.position.y = 150;
+		camera.position.z = 500;
+
+		scene = new THREE.Scene();
+		scene.background = new THREE.Color(0, 0, 0);
+
+		const pointLight1 = new THREE.PointLight(0xffffff, 3, 0, 0);
+		pointLight1.position.set(500, 500, 500);
+		scene.add(pointLight1);
+
+		const pointLight2 = new THREE.PointLight(0xffffff, 1, 0, 0);
+		pointLight2.position.set(-500, -500, -500);
+		scene.add(pointLight2);
+
+		sphere = new THREE.Mesh(
+			new THREE.SphereGeometry(200, 20, 10),
+			new THREE.MeshPhongMaterial({ flatShading: true }),
+		);
+		scene.add(sphere);
+		const geometry = new THREE.BoxGeometry(200, 200, 200);
+		const material = new THREE.MeshBasicMaterial({
+			color: 0x00ff00,
+		});
+		const cube = new THREE.Mesh(geometry, material);
+		//scene.add(cube)
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+
+		effect = new AsciiEffect(renderer, " .:-+*=%@#", {
+			invert: true,
+		});
+		effect.setSize(window.innerWidth / 4, window.innerHeight / 4);
+		effect.domElement.style.color = document.body.style.color;
+		effect.domElement.style.backgroundColor =
+			document.body.style.backgroundColor;
+
+		// Special case: append effect.domElement, instead of renderer.domElement.
+		// AsciiEffect creates a custom domElement (a div container) where the ASCII elements are placed.
+
+		document.getElementById("sphere").appendChild(
+			effect.domElement,
+		);
+
+		controls = new TrackballControls(camera, effect.domElement);
+
+		//
+	}
+
+	//
+
+	function animate() {
+		requestAnimationFrame(animate);
+
+		render();
+	}
+
+	function render() {
+		const timer = Date.now() - start;
+
+		sphere.position.y = timer * 0.001;
+		sphere.rotation.x = timer * 0.0003;
+
+		controls.update();
+
+		effect.render(scene, camera);
+	}
+</script>
