@@ -10,6 +10,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^4.7.1"
+    "astro": "^4.7.1",
+    "concrete.css": "^3.0.0",
+    "normalize.css": "^8.0.1",
+    "three": "^0.164.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-astro": "^0.13.0"
   }
 }
